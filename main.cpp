@@ -14,6 +14,7 @@
 
 // 是否开机自启动
 #define AUTO_START true
+#define SAVE_PATH "C:\\Users\\Evemia\\Pictures\\screenshots"
 
 class ClipboardMonitor : public QObject {
     Q_OBJECT
@@ -22,6 +23,8 @@ public:
     explicit ClipboardMonitor(QObject *parent = nullptr)
         : QObject(parent) {
         _clipboard = QGuiApplication::clipboard();
+        _savingPath = std::strcat(
+            std::getenv("USERPROFILE"), "\\Pictures\\screenshots");
 
         connect(_clipboard, &QClipboard::dataChanged,
                 this, &ClipboardMonitor::readClipboard);
@@ -63,11 +66,11 @@ public slots:
         if (mimeData->hasImage()) {
             QImage image = _clipboard->image();
             if (!image.isNull()) {
-                std::filesystem::path savePath(std::strcat(
-                    std::getenv("USERPROFILE"), "\\Pictures\\screenshots"));
-                savePath.append(std::to_string(std::time(nullptr)) + ".png");
+                std::filesystem::path basePath(_savingPath);
+                basePath.append(std::to_string(std::time(nullptr)) + ".png");
+                // qDebug() << "Saving image: " << basePath.string();
 
-                if (!image.save(savePath.string().c_str(), "PNG", 80)) {
+                if (!image.save(basePath.string().c_str(), "PNG", 80)) {
                     writeError("Failed to save image, check your saving path");
                 }
             } else {
@@ -78,6 +81,7 @@ public slots:
 
 private:
     QClipboard *_clipboard;
+    std::string _savingPath;
 };
 
 int main(int argc, char *argv[]) {
