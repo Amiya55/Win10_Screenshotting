@@ -14,7 +14,6 @@
 
 // 是否开机自启动
 #define AUTO_START true
-#define SAVE_PATH "C:\\Users\\Evemia\\Pictures\\screenshots"
 
 class ClipboardMonitor : public QObject {
     Q_OBJECT
