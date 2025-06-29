@@ -24,6 +24,10 @@ public:
         _clipboard = QGuiApplication::clipboard();
         _savingPath = std::strcat(
             std::getenv("USERPROFILE"), "\\Pictures\\screenshots");
+        std::filesystem::path p(_savingPath);
+        if (!exists(p)) {
+            std::filesystem::create_directory(p);
+        }
 
         connect(_clipboard, &QClipboard::dataChanged,
                 this, &ClipboardMonitor::readClipboard);
