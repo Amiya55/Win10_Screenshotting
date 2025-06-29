@@ -1,0 +1,2 @@
+# Win10_Screenshotting
+一个windows10系统下的截图自动保存工具
